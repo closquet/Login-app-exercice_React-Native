@@ -7,3 +7,4 @@ export * from './Profile/Profile';
 export * from './Spinner/Spinner';
 export * from './Album/Album';
 export * from './AlbumList/AlbumList';
+export * from './AnimatedViewIncoming/AnimatedViewIncoming';

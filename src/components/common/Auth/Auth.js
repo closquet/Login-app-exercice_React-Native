@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import styles from './styles'
 import firebase from 'firebase'
-import { Spinner, TextInputAndLabel } from '../'
+import { Spinner, TextInputAndLabel, AnimatedViewIncoming } from '../'
 import {Profile} from "../Profile/Profile";
 
 firebase.initializeApp({
@@ -56,7 +56,7 @@ class Auth extends Component{
         });
 
         return(
-            <View>
+            <AnimatedViewIncoming>
                 <View style={styles.field}>
                     <TextInputAndLabel
                         label='Email'
@@ -90,7 +90,7 @@ class Auth extends Component{
                         <TouchableOpacity style={styles.signUpLink}><Text>Créer un compte</Text></TouchableOpacity>
                 </View>
 
-            </View>
+            </AnimatedViewIncoming>
         );
     }
 }
