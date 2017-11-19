@@ -3,5 +3,7 @@ export * from './Auth/Auth';
 export * from './TextInputAndLabel/TextInputAndLabel';
 export * from './Main/Main';
 export * from './Footer/Footer';
-export * from './LoginButton/LoginButton';
 export * from './Profile/Profile';
+export * from './Spinner/Spinner';
+export * from './Album/Album';
+export * from './AlbumList/AlbumList';

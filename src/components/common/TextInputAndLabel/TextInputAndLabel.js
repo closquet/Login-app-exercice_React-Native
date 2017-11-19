@@ -3,21 +3,19 @@ import { View, TextInput, Text} from 'react-native';
 
 import styles from './styles';
 
-class TextInputAndLabel extends Component {
-    state = {text : '', name : this.props.name};
-    render(){
-        return(
-            <View style={styles.container}>
-                <Text style={styles.label}>{this.props.label}</Text>
-                <TextInput
-                    secureTextEntry={this.props.hideText}
-                    placeholder={this.props.placeholder}
-                    style={styles.input}
-                    onChangeText={(text) => this.setState({text})}
-                    value={this.state.text}
-                />
-            </View>
-        );
-    }
-}
+const TextInputAndLabel = ({ label, placeholder, value, onChangeText, secureTextEntry })=>{
+    return(
+        <View style={styles.container}>
+            <Text style={styles.label}>{label}</Text>
+            <TextInput
+                secureTextEntry={secureTextEntry}
+                placeholder={placeholder}
+                style={styles.input}
+                onChangeText={onChangeText}
+                autoCorrect={false}
+                value={value}
+            />
+        </View>
+    );
+};
 export {TextInputAndLabel};

@@ -1,124 +1,94 @@
 import React, {Component} from 'react'
-import { View, Text, TextInput, TouchableOpacity } from 'react-native'
-import commonStyles from '../commonStyles'
+import { View, Text, TouchableOpacity } from 'react-native'
 import styles from './styles'
 import firebase from 'firebase'
-import { Profile } from '../'
+import { Spinner, TextInputAndLabel } from '../'
+import {Profile} from "../Profile/Profile";
+
+firebase.initializeApp({
+    apiKey: 'AIzaSyDX5JeCmUwq38QhKTP_fGlS8Z5Qi084fMY',
+    authDomain: 'loginapp-8d15b.firebaseapp.com',
+    databaseURL: 'https://loginapp-8d15b.firebaseio.com',
+    projectId: 'loginapp-8d15b',
+    storageBucket: 'loginapp-8d15b.appspot.com',
+    messagingSenderId: '796844400741'
+});
 
 class Auth extends Component{
-    state = {email : '', password : '',
-        user:{
-            email : '',
-            uid : '',
-        }
-    };
-    login(){
-        firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password).catch(function(error) {
-            // Handle Errors here.
-            let errorCode = error.code;
-            let errorMessage = error.message;
-            console.log(errorCode + ' : ' + errorMessage);
-            // ...
-        });
-        firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-                this.setState({ user:{email:user.email, uid:user.uid} });
-            } else {
-                console.log('No user.');
-            }
-        });
-    };
-    logout(){
-        firebase.auth().signOut().then((user) => {
-            console.log('Sign-out successful.');
-            this.setState({user:{email:''}});
-        }).catch(function(error) {
-            console.log('An error happened : ' + error);
-        });
-    }
-    componentWillMount(){
-        firebase.initializeApp({
-            apiKey: 'AIzaSyDX5JeCmUwq38QhKTP_fGlS8Z5Qi084fMY',
-            authDomain: 'loginapp-8d15b.firebaseapp.com',
-            databaseURL: 'https://loginapp-8d15b.firebaseio.com',
-            projectId: 'loginapp-8d15b',
-            storageBucket: 'loginapp-8d15b.appspot.com',
-            messagingSenderId: '796844400741'
-        });
 
-        firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-                this.setState({ user:{email:user.email, uid:user.uid} });
-            } else {
-                console.log('No user.');
-            }
-        });
+    constructor(props){
+
+
+
+        super(props);
+        this.state = {
+            email : 'a@a.be',
+            password : '123456',
+            loading : false,
+        };
     }
+
+    login = () => {
+        this.setState({loading:true});
+        firebase.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+        .then( reponse => this.onLoginSuccess(reponse) )
+            .catch((error) => {
+                // Handle Errors here.
+                this.setState({loading:false});
+                let errorCode = error.code;
+                let errorMessage = error.message;
+                console.log('auth/login error ' + errorCode + ' : ' + errorMessage);
+                // ...
+            });
+    };
+
+    onLoginSuccess = (user) =>{
+        this.setState({loading:false});
+        this.props.onUserloggedIn(user);
+    };
+
+
     render(){
-        //console.log(firebase.auth().currentUser);
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                this.props.onUserloggedIn(user);
+            }
+        });
+
         return(
-            <View style={commonStyles.wrap}>
-
-                {
-                    (this.state.user.email) ? (
-                        <View>
-                            <Profile email={this.state.user.email} uid={this.state.user.uid} />
-                            <View  style={styles.buttonContainer}>
-                                <TouchableOpacity
-                                    ref={'logout'}
-                                    style={styles.button}
-                                    onPress={() => {this.logout();}}>
-                                    <Text style={styles.buttonText}>Se déconnecter</Text>
-                                </TouchableOpacity>
-                            </View>
-
+            <View>
+                <View style={styles.field}>
+                    <TextInputAndLabel
+                        label='Email'
+                        placeholder='example@test.com'
+                        value={this.state.email}
+                        onChangeText={ text => this.setState({email:text}) }/>
+                </View>
+                <View style={styles.field}>
+                    <TextInputAndLabel
+                        label='Password'
+                        placeholder={'Entrez votre mot de passe'}
+                        secureTextEntry
+                        value={this.state.password}
+                        onChangeText={ password => this.setState({password}) }/>
+                </View>
+                <View>
+                    {(this.state.loading) ? (
+                        <View style={styles.buttonContainer}>
+                            <Spinner />
                         </View>
-                    ) : (
-                        <View>
-                            <View style={styles.field}>
-                                <Text style={styles.label}>Email</Text>
-                                <TextInput
-                                    onSubmitEditing={(event) => {
-                                        this.refs.SecondInput.focus();
-                                    }}
-                                    keyboardType={'email-address'}
-                                    autoCorrect={false}
-                                    secureTextEntry={false}
-                                    placeholder={'email@exemple.be'}
-                                    style={styles.input}
-                                    onChangeText={(text) => this.setState({email:text})}
-                                    value={this.state.email}
-                                />
-                            </View>
-                            <View style={styles.field}>
-                                <Text style={styles.label}>Mot de pass</Text>
-
-                                <TextInput
-                                    onSubmitEditing={(event) => {
-                                        this.refs.login.touchableHandlePress();
-                                    }}
-                                    ref={'SecondInput'}
-                                    autoCorrect={false}
-                                    secureTextEntry={true}
-                                    placeholder={'********'}
-                                    style={styles.input}
-                                    onChangeText={(text) => this.setState({password:text})}
-                                    value={this.state.password}
-                                />
-                            </View>
-                            <View style={styles.buttonContainer}>
-                                <TouchableOpacity
-                                    ref={'login'}
-                                    style={styles.button}
-                                    onPress={() => {this.login();}}>
-                                    <Text style={styles.buttonText}>Se connecter</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <TouchableOpacity style={styles.signUpLink}><Text>Créer un compte</Text></TouchableOpacity>
-                        </View>
-
-                    )
-                }
+                    ):(
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity
+                            ref={'login'}
+                            style={styles.button}
+                            onPress={() => {this.login();}}>
+                            <Text style={styles.buttonText}>Se connecter</Text>
+                        </TouchableOpacity>
+                    </View>
+                    )}
+                        <TouchableOpacity style={styles.signUpLink}><Text>Créer un compte</Text></TouchableOpacity>
+                </View>
 
             </View>
         );

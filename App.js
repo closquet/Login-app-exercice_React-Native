@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { View, ScrollView } from 'react-native';
 import { Header, Main, Footer } from './src/components/common'
 
+
 export default class App extends Component{
     render() {
         return (
-            <View style={{flexGrow:1}}>
+            <View style={{flexGrow:1, maxHeight:'100%'}}>
                 <Header content={'Bienvenue'} />
                 <ScrollView  contentContainerStyle={{flexGrow:1}}>
                     <Main />
@@ -13,5 +14,5 @@ export default class App extends Component{
                 </ScrollView>
             </View>
         );
-    }rr
+    }
 }

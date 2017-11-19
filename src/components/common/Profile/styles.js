@@ -14,5 +14,24 @@ export default StyleSheet.create({
         fontSize:18,
         marginBottom:10
 
-    }
+    },
+    buttonContainer:{
+        alignItems:'center',
+        marginTop:20,
+        marginBottom:20,
+    },
+    button:{
+        width:200,
+        borderColor:'#027691',
+        borderWidth:2,
+        height:50,
+        alignItems:'center',
+        justifyContent:'center',
+        borderRadius:25,
+    },
+    buttonText:{
+        fontWeight:'bold',
+        fontSize:18,
+        color:'#027691',
+    },
 });
